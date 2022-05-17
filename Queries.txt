@@ -1,0 +1,41 @@
+/* Query 1 */
+SELECT mt.Name, count(t.MediaTypeId) AS Used_times
+FROM MediaType mt
+JOIN Track t
+ON mt.MediaTypeId = t.MediaTypeId
+GROUP BY mt.Name
+ORDER by Used_times DESC;
+
+/* Query 2 */
+SELECT c.CustomerId,c.FirstName ||" "|| c.LastName as full_Name, sum(i.total) AS tolal_dollars
+FROM Invoice i
+JOIN Customer c
+ON i.CustomerId = c.CustomerId
+GROUP by c.CustomerId
+ORDER by tolal_dollars DESC
+LIMIT 10;
+
+/* Query 3 */
+SELECT ar.ArtistId, ar.Name, count(tr.TrackId) AS Songs
+FROM Artist ar
+JOIN Album al
+ON ar.ArtistId = al.ArtistId
+JOIN Track tr
+ON al.AlbumId = tr.AlbumId
+JOIN Genre ge
+ON tr.GenreId = ge.GenreId
+WHERE ge.Name = "Rock"
+GROUP by ar.Name
+ORDER by Songs DESC
+LIMIT 10;
+
+/* Query 4 */
+SELECT Country,max(total_spent) AS total_spent, FirstName||" "|| LastName AS Full_name, CustomerId 
+FROM
+(SELECT c.Country,sum(i.total) AS total_spent , c.FirstName, c.LastName, i.CustomerId
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+GROUP BY i.CustomerId,c.Country
+ORDER BY c.Country)
+GROUP BY Country
